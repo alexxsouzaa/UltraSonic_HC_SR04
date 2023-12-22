@@ -14,6 +14,8 @@ Certifique-se de conectar o sensor aos pinos corretos na sua placa Arduino:
 
 - Pino Trigger do HC-SR04 -> Pino de saída digital no Arduino (por exemplo, pin 4)
 - Pino Echo do HC-SR04 -> Pino de entrada digital no Arduino (por exemplo, pin 5)
+  
+![Arduino_and_HC_SR04](https://github.com/alexxsouzaa/UltraSonic_HC_SR04/assets/132787362/17cb2b34-fda8-4a18-802c-d52b00999779)
 
 ## Como Funciona
 
