@@ -23,28 +23,27 @@ A biblioteca UltraSonic_HC_SR04 simplifica a integração do sensor de distânci
 
 ```cpp
 #include <UltraSonic_HC_SR04.h>
-#include <Arduino.h>
 
-// Define os pinos de trigger e echo
-const int PinoTrigger = 4;
-const int PinoEcho = 3;
+#define pinTrigger 4
+#define pinEcho 5
 
-UltraSonic_HC_SR04 sensor_ultrassonico(PinoTrigger, PinoEcho);
+UltraSonic_HC_SR04 hc_sr04(pinTrigger, pinEcho);
+
+float dist_cm, dist_m;
 
 void setup() {
   Serial.begin(9600);
 }
 
 void loop() {
-  double distancia_cm = sensor_ultrassonico.distancia_cm();
-  
-  if (distancia_cm >= 0) {
-    Serial.print("Distância em centímetros: ");
-    Serial.println(distancia_cm);
-  } else {
-    Serial.println("Leitura inválida. Verifique a conexão do sensor.");
-  }
-  
+  dist_cm = hc_sr04.distancia_cm();
+  dist_m = dist_cm / 100;
+  Serial.print("Distancia: ");
+  Serial.print(dist_cm);
+  Serial.print("cm | ");
+  Serial.print(dist_m);
+  Serial.println("m");
+  Serial.println("____________________________________");
   delay(1000);
 }
 ```
