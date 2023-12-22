@@ -1,7 +1,5 @@
 # Biblioteca UltraSonic_HC_SR04 para Arduino
 
-![HC-SR04](https://i.imgur.com/sHhnGdE.jpg)
-
 ## Visão Geral
 
 A biblioteca UltraSonic_HC_SR04 simplifica a integração do sensor de distância ultrassônico HC-SR04 com a plataforma Arduino. Este sensor amplamente utilizado mede distâncias emitindo ondas ultrassônicas e calculando o tempo que as ondas levam para retornar.
@@ -50,10 +48,6 @@ void loop() {
   delay(1000);
 }
 ```
-
-## Contribuições
-
-Se encontrar problemas ou tiver sugestões de melhorias, por favor, [abra uma issue](https://github.com/YOUR_USERNAME/UltraSonic_HC_SR04/issues) ou [faça um pull request](https://github.com/YOUR_USERNAME/UltraSonic_HC_SR04/pulls).
 
 ## Licença
 
