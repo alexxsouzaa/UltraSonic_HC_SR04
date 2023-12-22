@@ -1,0 +1,2 @@
+UltraSonic_HC_SR04	KEYWORD1
+distancia_cm		KEYWORD2
