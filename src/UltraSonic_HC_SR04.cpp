@@ -1,78 +1,57 @@
-#include "UltrasonicSensor.h"
+/*
+  Nome do Arquivo: UltraSonic_HC_SR04.h
+  Autor: Bruno Álex
+  Data de Criação: 08 de janeiro de 2024
+  Descrição: Este arquivo contém a implementação da classe UltraSonic_HC_SR04,
+             que representa um sensor de distância ultrassônico HC-SR04.
+             O sensor é usado para medir distâncias em centímetros e milímetros.
+*/
 
-/* ------------------------------ CONSTRUCTOR CODE ------------------------------ */
+#include <UltraSonic_HC_SR04.h>
+#include <Arduino.h>
 
-/* Constructor - It saves the pin numbers of the Ultrasonic sensor and set them in OUTPUT and INPUT mode */
-UltrasonicSensor::UltrasonicSensor(int trigger, int echo) {
-    this->pinTrigger = trigger;
-    this->pinEcho = echo;
-    this->temperature = 20.0f;
+const short int TRIGGER_DELAY = 2;  // Tempo de espera para o pino trigger em microssegundos
+const short int PULSE_DELAY = 10;   // Tempo de pulso em microssegundos
+const double SOUND_SPEED = 0.034;  // Velocidade do som em cm/microssegundo
 
-    pinMode(this->pinTrigger, OUTPUT);
-    pinMode(this->pinEcho, INPUT);
+UltraSonic_HC_SR04::UltraSonic_HC_SR04(int trigger, int echo)
+{
+    this->pin_trigger = trigger;
+    this->pin_echo = echo;
 
-    digitalWrite(this->pinTrigger, LOW);
+    // Configuração dos pinos
+    pinMode(this->pin_trigger, OUTPUT);
+    pinMode(this->pin_echo, INPUT);
+
+    // Inicialização do pino trigger em estado baixo
+    digitalWrite(this->pin_trigger, LOW);
 }
 
-/* ------------------------------ SIMPLE APIs ------------------------------ */
+int UltraSonic_HC_SR04::distanceInMicroseconds()
+{
+    // Envio do pulso ultrassônico
+    digitalWrite(pin_trigger, LOW);
+    delayMicroseconds(TRIGGER_DELAY);
+    digitalWrite(pin_trigger, HIGH);
+    delayMicroseconds(PULSE_DELAY);
+    digitalWrite(pin_trigger, LOW);
 
-/* Method - It returns the distance in microseconds */
-int UltrasonicSensor::distanceInMicroseconds() {
-    digitalWrite(this->pinTrigger, HIGH);
-    delayMicroseconds(10);
-    digitalWrite(this->pinTrigger, LOW);
-
-    return (pulseIn(this->pinEcho, HIGH) / 2);
+    // Leitura do tempo de retorno do eco
+    return pulseIn(this->pin_echo, HIGH);
 }
 
-/* Method - It returns the external temperature */
-float UltrasonicSensor::getTemperature() {
-    return this->temperature;
+double UltraSonic_HC_SR04::distancia_cm()
+{
+    delay(10);  // Pequeno atraso antes da leitura para evitar interferências
+
+    // Cálculo da distância em centímetros
+    return (distanceInMicroseconds() * SOUND_SPEED) / 2;
 }
 
-/* Method - It sets the external temperature */
-void UltrasonicSensor::setTemperature(float temperature) {
-    this->temperature = temperature;
-}
+double UltraSonic_HC_SR04::distancia_mm()
+{
+    delay(10);  // Pequeno atraso antes da leitura para evitar interferências
 
-/* ------------------------------ OTHER FUNCTIONS ------------------------------ */
-
-/* Method - It returns the distance in centimeters */
-int UltrasonicSensor::distanceInCentimeters() {
-    double reciprocalVelocity = 10000 / (331.45 + (0.62 * this->temperature));  //  reciprocalVelocity = 1 / velocity
-    int duration = this->distanceInMicroseconds();
-    int centimeters = (duration / reciprocalVelocity);                          //  space   = duration * velocity =
-                                                                                //          = duration / reciprocalVelocity
-
-    return centimeters;
-}
-
-/* Method - It returns the distance in millimeters */
-int UltrasonicSensor::distanceInMillimeters() {
-    double reciprocalVelocity = 1000 / (331.45 + (0.62 * this->temperature));  //  reciprocalVelocity = 1 / velocity
-    int duration = this->distanceInMicroseconds();
-    int millimeters = (duration / reciprocalVelocity);                          //  space   = duration * velocity =
-                                                                                //          = duration / reciprocalVelocity
-
-    return millimeters;
-}
-
-/* Method - It calibrates the Ultrasonic sensor */
-void UltrasonicSensor::calibration(int realDistance) {
-    double velocity = (((double) realDistance) / this->distanceInMicroseconds()) * 10000;
-    this->setTemperature((velocity - 331.45) / 0.62);
-}
-
-/* Method - It returns the UltrasonicSensor informations */
-String UltrasonicSensor::toString() {
-    String ret = String("Ultrasonic: {");
-    ret.concat("pinTrigger=");
-    ret.concat(this->pinTrigger);
-    ret.concat(", pinEcho=");
-    ret.concat(this->pinEcho);
-    ret.concat(", temperature=");
-    ret.concat(this->temperature);
-    ret.concat("}");
-    
-    return ret;
+    // Cálculo da distância em milímetros
+    return ((distanceInMicroseconds() * SOUND_SPEED) / 2) * 10;
 }
